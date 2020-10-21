@@ -6,6 +6,8 @@ import {appLogger} from "./logger/appLogger";
 
 const cors = require('@koa/cors');
 const mount = require('koa-mount');
+const session = require('koa-session');
+const passport = require('koa-passport');
 
 export default (app) => {
     app.use(async (ctx, next) => {
@@ -35,15 +37,18 @@ export default (app) => {
         }
     });
 
+    app.keys = ['rer9Ohd7'];
+    app.use(session(app));
+    app.use(bodyParser());
+    app.use(passport.initialize());
+    app.use(passport.session());
 
     app.use(serve(config.static_dir.root));
-    app.use(bodyParser());
     app.use(cors());
     app.use(mount('/api', routes()));
 
 
     app.on('error', (err, ctx) => {
         appLogger.error(err.message);
-        console.log('server error', err, ctx)
     });
 }
