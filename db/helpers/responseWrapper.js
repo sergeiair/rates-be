@@ -5,7 +5,9 @@ export class ResponseWrapper {
     _code = null;
 
     set data(value) {
-        this._data = { ...value };
+        if (this.isObject(value)) {
+            this._data = { ...value };
+        }
 
         this._code = 200;
     }

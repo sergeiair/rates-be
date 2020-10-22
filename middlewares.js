@@ -40,6 +40,8 @@ export default (app) => {
     app.keys = ['rer9Ohd7'];
     app.use(session(app));
     app.use(bodyParser());
+
+    require('./auth/auth');
     app.use(passport.initialize());
     app.use(passport.session());
 
@@ -47,8 +49,7 @@ export default (app) => {
     app.use(cors());
     app.use(mount('/api', routes()));
 
-
-    app.on('error', (err, ctx) => {
+    app.on('error', (err) => {
         appLogger.error(err.message);
     });
 }

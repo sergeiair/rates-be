@@ -14,31 +14,22 @@ export default class UsersDataService {
 
     getUserUnsafe(email) {
         return Realm.open(this.config)
-            .then(realm => realm.objects('User')
-                .filtered(`email = "${email}" `))
-                .catch((e) => {
-                    appLogger.error(e.message)
-                });
+            .then(realm => realm.objectForPrimaryKey('User', email))
+            .catch((e) => appLogger.error(e.message));
     }
 
     async getUser(data) {
         const response = new ResponseWrapper();
         const user = await this.getUserUnsafe(data.email);
 
-        console.log(appLogger.warn(user))
-
-        response.data = user;
-
-        /*const user = await this.getUserUnsafe(data.email);
-
-        console.log(user.valueOf())
-
-        response.data = user;*/
-        /*if (bcrypt.compareSync(data.pw, user.pw)) {
-            response.data = user;
+        if (bcrypt.compareSync(data.pw || '', user.pw || '')) {
+            response.data = {
+                email: user.email,
+                name: user.name
+            };
         } else {
             response.error = 'Not found'
-        }*/
+        }
 
         return response;
     }

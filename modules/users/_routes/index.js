@@ -3,7 +3,9 @@
 import UsersController from "../controller";
 import UsersDataService from "../data.service";
 
+const passport = require('koa-passport');
 const Router = require('koa-trie-router');
+
 const router = new Router();
 const controller = new UsersController(new UsersDataService());
 const middleware = async (ctx, next) => {
@@ -32,7 +34,17 @@ export const register = () => {
 
 export const login = () => {
   router.post('/login', middleware, async (ctx, next) => {
-    try {
+    await passport.authenticate('local', async(err, user) => {
+      console.log(user)
+      if(user === false){
+        ctx.body = { message: 'Done' };
+      } else {
+        ctx.body = { message: 'ERR' };
+      }
+    })(ctx)
+
+
+   /* try {
       const resp = await controller.getUser(ctx.request.body);
 
       ctx.status = resp.code;
@@ -42,7 +54,7 @@ export const login = () => {
       ctx.body = { message: e.message };
     }
 
-    await next();
+    await next();*/
   });
 
 
