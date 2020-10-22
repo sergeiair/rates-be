@@ -1,7 +1,5 @@
 'use strict';
 
-import * as bcrypt from "bcrypt";
-
 export default class UsersController {
 
     dataService;
@@ -10,16 +8,12 @@ export default class UsersController {
         this.dataService = _dataServiceInstance;
     }
 
-    async register(data) {
-        return new Promise((resolve) => {
-            resolve(this.dataService.registerUser(data));
-        })
+    register(data) {
+        return this.dataService.registerUser(data);
     }
 
-    async getUser(data) {
-        return new Promise((resolve) => {
-            resolve(this.dataService.getUser(data));
-        })
+    getUser(data) {
+        return this.dataService.getUser(data);
     }
 
 

@@ -12,27 +12,33 @@ export default class UsersDataService {
         path: './db/files/users/01.realm',
     };
 
-    async getUserUnsafe(email) {
+    getUserUnsafe(email) {
         return Realm.open(this.config)
-            .then(realm => {
-                return realm.objects('User')
-                    .filtered(`email = "${email}"`);
-            }).catch((e) => {
-                appLogger.error(e.message)
-            });
+            .then(realm => realm.objects('User')
+                .filtered(`email = "${email}" `))
+                .catch((e) => {
+                    appLogger.error(e.message)
+                });
     }
 
     async getUser(data) {
         const response = new ResponseWrapper();
         const user = await this.getUserUnsafe(data.email);
 
-        console.log(user);
+        console.log(appLogger.warn(user))
 
-        if (!!user && bcrypt.compareSync(data.pw, user.pw)) {
+        response.data = user;
+
+        /*const user = await this.getUserUnsafe(data.email);
+
+        console.log(user.valueOf())
+
+        response.data = user;*/
+        /*if (bcrypt.compareSync(data.pw, user.pw)) {
             response.data = user;
         } else {
             response.error = 'Not found'
-        }
+        }*/
 
         return response;
     }

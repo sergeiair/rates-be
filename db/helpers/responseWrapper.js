@@ -5,10 +5,9 @@ export class ResponseWrapper {
     _code = null;
 
     set data(value) {
-        if (this.isObject(value)) {
-            this._data = { ...value };
-            this._code = 200;
-        }
+        this._data = { ...value };
+
+        this._code = 200;
     }
 
     set error(err) {
@@ -16,7 +15,7 @@ export class ResponseWrapper {
         this._code = 503;
     }
 
-    get errorCode() {
+    get code() {
         return this._code;
     }
 

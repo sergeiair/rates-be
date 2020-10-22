@@ -1,11 +1,11 @@
 'use strict';
 
-import RatesController from "../controller";
-import RatesDataService from "../data.service";
+import UsersController from "../controller";
+import UsersDataService from "../data.service";
 
 const Router = require('koa-trie-router');
 const router = new Router();
-const controller = new RatesController(new RatesDataService());
+const controller = new UsersController(new UsersDataService());
 const middleware = async (ctx, next) => {
   ctx.type = 'json';
   await next()
@@ -16,7 +16,7 @@ export const register = () => {
     try {
       const resp = await controller.register(ctx.request.body);
 
-      ctx.status = resp.errorCode;
+      ctx.status = resp.code;
       ctx.body = { message: 'Done', resp };
     } catch (e) {
       ctx.status = 500;
@@ -35,7 +35,7 @@ export const login = () => {
     try {
       const resp = await controller.getUser(ctx.request.body);
 
-      ctx.status = resp.errorCode;
+      ctx.status = resp.code;
       ctx.body = { message: 'Done', resp };
     } catch (e) {
       ctx.status = 500;
