@@ -22,13 +22,14 @@ export default class UsersDataService {
         const response = new ResponseWrapper();
         const user = await this.getUserUnsafe(data.email);
 
-        if (bcrypt.compareSync(data.pw || '', user.pw || '')) {
+        if (!!user && bcrypt.compareSync(data.pw || '', user.pw || '')) {
             response.data = {
                 email: user.email,
                 name: user.name
             };
         } else {
-            response.error = 'Not found'
+            response.error = 'Not found';
+            response.code = 404;
         }
 
         return response;

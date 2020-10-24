@@ -21,6 +21,10 @@ export class ResponseWrapper {
         return this._code;
     }
 
+    set code(code) {
+        this._code = code;
+    }
+
     isObject(a) {
         return (!!a) && (a.constructor === Object);
     };
