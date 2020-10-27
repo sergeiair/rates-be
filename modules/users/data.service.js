@@ -1,19 +1,26 @@
 import Realm from "realm";
+import * as bcrypt from "bcrypt";
 import {appLogger} from "../../logger";
 import {UserSchema} from "../../db/schemes/user";
 import {ResponseWrapper} from "../../db/helpers/responseWrapper";
-import * as bcrypt from "bcrypt";
+import {SessionSchema} from "../../db/schemes/session";
 
 export default class UsersDataService {
 
-    config = {
+    userConfig = {
         schema: [UserSchema],
         deleteRealmIfMigrationNeeded: true,
         path: './db/files/users/01.realm',
     };
 
+    sessionConfig = {
+        schema: [SessionSchema],
+        deleteRealmIfMigrationNeeded: true,
+        path: './db/files/sessions/01.realm',
+    };
+
     getUserUnsafe(email) {
-        return Realm.open(this.config)
+        return Realm.open(this.userConfig)
             .then(realm => realm.objectForPrimaryKey('User', email))
             .catch((e) => appLogger.error(e.message));
     }
@@ -35,8 +42,19 @@ export default class UsersDataService {
         return response;
     }
 
+    storeSession(data) {
+        return Realm.open(this.sessionConfig)
+            .then(realm => {
+                realm.close();
+                return response;
+            })
+            .catch((e) => {
+                appLogger.error(e.message)
+            });
+    }
+
     registerUser(data) {
-        return Realm.open(this.config)
+        return Realm.open(this.userConfig)
             .then(realm => {
                 const { email, pw, name } = data;
                 const response = new ResponseWrapper();

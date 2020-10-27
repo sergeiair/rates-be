@@ -2,6 +2,7 @@
 
 import UsersController from "../controller";
 import UsersDataService from "../data.service";
+import {appLogger} from "../../../logger";
 
 const Router = require('koa-trie-router');
 const router = new Router();
@@ -40,7 +41,7 @@ export const login = () => {
       const resp = await controller.getUser(ctx.request.body);
 
       ctx.status = resp.code;
-      ctx.session.user = resp.data.email;
+      ctx.session.user = `${resp.data.email}@${Date.now()}`;
       ctx.body = { message: 'Done', data: resp.data };
     } catch (e) {
       ctx.status = 500;
@@ -58,10 +59,7 @@ export const logout = () => {
   router.post('/logout', middleware, async (ctx, next) => {
 
     try {
-      //const resp = await controller.getUser(ctx.request.body);
-
       ctx.status = 200;
-      ctx.session = null;
       ctx.body = { message: 'Done' };
     } catch (e) {
       ctx.status = 500;

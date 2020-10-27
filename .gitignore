@@ -6,7 +6,10 @@
 # production
 /build
 
-/db/files
+/db/files/sessions
+/db/files/rates
+/db/files/users
+/db/files/predictions
 
 # misc
 .DS_Store
