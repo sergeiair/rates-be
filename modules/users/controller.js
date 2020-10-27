@@ -16,5 +16,13 @@ export default class UsersController {
         return this.dataService.getUser(data);
     }
 
+    storeSession(email, ip) {
+        return this.dataService.storeSession(email, ip);
+    }
+
+    destroySession(email) {
+        return this.dataService.destroySession(email);
+    }
+
 
 }

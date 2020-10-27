@@ -4,6 +4,8 @@ import {appLogger} from "../../logger";
 import {UserSchema} from "../../db/schemes/user";
 import {ResponseWrapper} from "../../db/helpers/responseWrapper";
 import {SessionSchema} from "../../db/schemes/session";
+import {sessionConfig} from "../../middlewares";
+import * as md5 from "md5";
 
 export default class UsersDataService {
 
@@ -25,12 +27,19 @@ export default class UsersDataService {
             .catch((e) => appLogger.error(e.message));
     }
 
+    getSession(email) {
+        return Realm.open(this.sessionConfig)
+            .then(realm => realm.objectForPrimaryKey('Session', email))
+            .catch((e) => appLogger.error(e.message));
+    }
+
     async getUser(data) {
         const response = new ResponseWrapper();
         const user = await this.getUserUnsafe(data.email);
 
         if (!!user && bcrypt.compareSync(data.pw || '', user.pw || '')) {
             response.data = {
+                hashedEmail: md5(user.email),
                 email: user.email,
                 name: user.name
             };
@@ -42,11 +51,36 @@ export default class UsersDataService {
         return response;
     }
 
-    storeSession(data) {
+    storeSession(email, ip) {
         return Realm.open(this.sessionConfig)
             .then(realm => {
+                realm.write(() => {
+                    realm.create('Session', {
+                        expired: Date.now() + sessionConfig.maxAge,
+                        id: email,
+                        info: ip
+                    }, Realm.UpdateMode.Modified);
+                });
+
                 realm.close();
-                return response;
+            })
+            .catch((e) => {
+                appLogger.error(e.message)
+            });
+    }
+
+    destroySession(email) {
+        return Realm.open(this.sessionConfig)
+            .then(realm => {
+                const session = realm.objectForPrimaryKey('Session', email);
+
+                if (!!session) {
+                    realm.write(() => {
+                        realm.delete(session)
+                    });
+                }
+
+                realm.close();
             })
             .catch((e) => {
                 appLogger.error(e.message)

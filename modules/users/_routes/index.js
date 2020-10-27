@@ -2,7 +2,9 @@
 
 import UsersController from "../controller";
 import UsersDataService from "../data.service";
-import {appLogger} from "../../../logger";
+import {getClientIp} from "../../../utils/network";
+import {getUserEmailFromSession} from "../../../utils/session";
+import * as md5 from "md5";
 
 const Router = require('koa-trie-router');
 const router = new Router();
@@ -39,10 +41,14 @@ export const login = () => {
 
     try {
       const resp = await controller.getUser(ctx.request.body);
+      controller.storeSession(resp.data.hashedEmail, getClientIp(ctx.request));
 
       ctx.status = resp.code;
-      ctx.session.user = `${resp.data.email}@${Date.now()}`;
-      ctx.body = { message: 'Done', data: resp.data };
+      ctx.session.user = `${resp.data.hashedEmail}$${Date.now()}`;
+      ctx.body = { message: 'Done', data: {
+        email: resp.data.email,
+        name: resp.data.name
+      }};
     } catch (e) {
       ctx.status = 500;
       ctx.body = { message: e.message };
@@ -59,6 +65,8 @@ export const logout = () => {
   router.post('/logout', middleware, async (ctx, next) => {
 
     try {
+      controller.destroySession(getUserEmailFromSession(ctx));
+
       ctx.status = 200;
       ctx.body = { message: 'Done' };
     } catch (e) {

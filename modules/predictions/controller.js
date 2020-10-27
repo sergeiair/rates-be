@@ -8,8 +8,8 @@ export default class PredictionsController {
         this.dataService = _dataServiceInstance;
     }
 
-    getAll() {
-        return this.dataService.getAll();
+    getAll(email) {
+        return this.dataService.getAll(email);
     }
 
     storeSingle(data) {

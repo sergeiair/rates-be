@@ -1,12 +1,10 @@
 
 export const SessionSchema = {
     name: 'Session',
-    primaryKey: 'email',
+    primaryKey: 'id',
     properties: {
-        created: 'int',
         expired: 'int',
-        email: {type: 'string', indexed: true},
-        token: 'string',
-        deviceId: 'string'
+        id: 'string',
+        info: 'string'
     }
 };

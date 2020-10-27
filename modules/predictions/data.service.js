@@ -10,10 +10,11 @@ export default class PredictionsDataService {
         path: './db/files/predictions/01.realm',
     };
 
-    getAll() {
+    getAll(email) {
         return Realm.open(this.config)
             .then(realm => {
-                return realm.objects('Prediction');
+                return realm.objects('Prediction')
+                    .filtered(`owner = "${email}"`);
             })
             .catch((e) => {
                 appLogger.error(e.message)

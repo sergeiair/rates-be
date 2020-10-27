@@ -8,7 +8,7 @@ const cors = require('@koa/cors');
 const mount = require('koa-mount');
 const session = require('koa-session-auth');
 
-const sessionConfig = {
+export const sessionConfig = {
     useToken: true, /** (boolean) use token-session or not (default true) */
     useCookie: false, /** (boolean) use cookie-session or not (default true) */
     key: 'GoAway', /** (string) cookie and token key (default is KoaToken) */
@@ -46,6 +46,8 @@ export default (app) => {
             }
 
         } catch (err) {
+            appLogger.error(err);
+
             ctx.status = err.status || 500;
             ctx.type = 'json';
             ctx.body = {
@@ -53,15 +55,15 @@ export default (app) => {
                 message: err.message
             };
 
-            ctx.app.emit('error', err, ctx)
+            ctx.app.emit('error', err, ctx);
+
         }
     });
 
     app.keys = ['11223344qqwweerr'];
-
     app.use(bodyParser());
     app.use(serve(config.static_dir.root));
-    app.use(cors( ));
+    app.use(cors());
     app.use(session(sessionConfig, app));
     app.use(mount('/api', routes()));
 

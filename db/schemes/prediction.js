@@ -8,6 +8,7 @@ export const PredictionSchema = {
         realRate: 'double',
         finalRate: 'double',
         pair:  'string',
+        owner:  'string',
         time: 'int',
         verifyTime: 'int',
         forecast: 'int',
