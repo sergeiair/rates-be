@@ -12,6 +12,10 @@ export class ResponseWrapper {
         this._code = 200;
     }
 
+    get data() {
+        return this._data;
+    }
+
     set error(err) {
         this._error = err;
         this._code = 503;

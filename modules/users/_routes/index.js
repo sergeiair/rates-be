@@ -6,8 +6,11 @@ import UsersDataService from "../data.service";
 const Router = require('koa-trie-router');
 const router = new Router();
 const controller = new UsersController(new UsersDataService());
+
 const middleware = async (ctx, next) => {
   ctx.type = 'json';
+  ctx.set('Access-Control-Expose-Headers', 'GoAway');
+
   await next()
 };
 
@@ -32,11 +35,13 @@ export const register = () => {
 
 export const login = () => {
   router.post('/login', middleware, async (ctx, next) => {
+
     try {
       const resp = await controller.getUser(ctx.request.body);
 
       ctx.status = resp.code;
-      ctx.body = { message: 'Done', resp };
+      ctx.session.user = resp.data.email;
+      ctx.body = { message: 'Done', data: resp.data };
     } catch (e) {
       ctx.status = 500;
       ctx.body = { message: e.message };
@@ -49,4 +54,23 @@ export const login = () => {
   return router.middleware();
 };
 
+export const logout = () => {
+  router.post('/logout', middleware, async (ctx, next) => {
+
+    try {
+      //const resp = await controller.getUser(ctx.request.body);
+
+      ctx.status = 200;
+      ctx.session = null;
+      ctx.body = { message: 'Done' };
+    } catch (e) {
+      ctx.status = 500;
+      ctx.body = { message: e.message };
+    }
+
+    await next();
+  });
+
+  return router.middleware();
+};
 

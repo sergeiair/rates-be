@@ -1,7 +1,6 @@
 import Realm from "realm";
 import {RateSchema} from "../../db/schemes/rates";
 import {appLogger} from "../../logger";
-import {PredictionSchema} from "../../db/schemes/prediction";
 
 export default class RatesDataService {
 
@@ -26,7 +25,7 @@ export default class RatesDataService {
     }
 
     getHistory(base, number) {
-        return Realm.open(this.config2)
+        return Realm.open(this.config)
             .then(realm => {
                 return realm.objects('Rate')
                     .filtered(`base = "${base}"`)

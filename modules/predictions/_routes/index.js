@@ -2,18 +2,14 @@
 
 import PredictionsController from "../controller";
 import PredictionsDataService from "../data.service";
+import {authMiddleware} from "../../../guards/authMiddlware";
 
 const Router = require('koa-trie-router');
 const router = new Router();
-
 const controller = new PredictionsController(new PredictionsDataService());
-const middleware = async (ctx, next) => {
-  ctx.type = 'json';
-  await next()
-};
 
 export const create = () => {
-  router.post('/predictions', middleware, async (ctx, next) => {
+  router.post('/predictions', authMiddleware, async (ctx, next) => {
     try {
       controller.storeSingle(ctx.request.body);
 
@@ -30,7 +26,7 @@ export const create = () => {
 };
 
 export const getAll = () => {
-  router.get('/predictions', middleware, async (ctx, next) => {
+  router.get('/predictions', authMiddleware, async (ctx, next) => {
     try {
       const items = await controller.getAll();
 
