@@ -10,11 +10,11 @@ export default class AnalyzeDataService {
         path: './db/files/predictions/01.realm',
     };
 
-    getAllPredictions(email) {
+    getAllCompletedPredictions(email) {
         return Realm.open(this.config)
             .then(realm => {
                 return realm.objects('Prediction')
-                    .filtered(`owner = "${email}"`);
+                    .filtered(`owner = "${email}" AND finalRate != ${0}`);
             })
             .catch((e) => {
                 appLogger.error(e.message)

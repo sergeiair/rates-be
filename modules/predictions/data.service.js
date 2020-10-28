@@ -37,4 +37,15 @@ export default class PredictionsDataService {
                 realm.close();
             }).catch((e) => appLogger.error(e.message));
     }
+
+    getAllCompletedPredictions(email) {
+        return Realm.open(this.config)
+            .then(realm => {
+                return realm.objects('Prediction')
+                    .filtered(`owner = "${email}" AND finalRate != ${0}`);
+            })
+            .catch((e) => {
+                appLogger.error(e.message)
+            });
+    }
 }

@@ -1,45 +1,6 @@
 const tf = require('@tensorflow/tfjs-node');
 
-export const loadedData=[
-    {
-        "predRate": 0.85744612,
-        "realRate": 0.85403,
-        "finalRate": 0.853224,
-        "forecast": 1,
-        "volatility": 1
-    },
-    {
-        "predRate": 0.95344612,
-        "realRate": 0.96403,
-        "finalRate": 0.958224,
-        "forecast": 1,
-        "volatility": 2
-    },
-    {
-        "predRate": 0.95344612,
-        "realRate": 0.96403,
-        "finalRate": 0.958224,
-        "forecast": 1,
-        "volatility": 2
-    },
-    {
-        "predRate": 1.15344612,
-        "realRate": 1.16403,
-        "finalRate": 1.128224,
-        "forecast": -1,
-        "volatility": 3
-    },
-    {
-        "predRate": 1.25344612,
-        "realRate": 1.23403,
-        "finalRate": 1.278224,
-        "forecast": 3,
-        "volatility": 2
-    },
-];
-
-
-export class PredictionsTFService {
+export class PredictionTFService {
 
     model = tf.sequential();
 
@@ -96,20 +57,20 @@ export class PredictionsTFService {
 
     initInputTnsr() {
         this.inputTnsr = tf.tensor(this._data.map((item) => ([
-            item.volatility, item.forecast, item.realRate, item.finalRate
+            item.volatility, item.forecast, item.realRate, item.predRate
         ])));
     }
 
     initLabelsTnsr() {
         this.labelTnsr = tf.tensor2d(
-            this._data.map((item) => item.predRate
-        ), [5, 1]);
+            this._data.map((item) => item.finalRate
+        ), [this._data.length, 1]);
     }
 
     configure() {
         this.model.add(tf.layers.dense({ units: 1, inputShape: [4] }));
         this.model.add(tf.layers.dense({ units: 1, useBias: true }));
-        this.model.compile({ loss: 'meanSquaredError', optimizer: 'adam' });
+        this.model.compile({ loss: 'meanSquaredError', optimizer: 'sgd' });
     }
 
     destroy() {
@@ -118,13 +79,13 @@ export class PredictionsTFService {
 
     async getResult(params, epochs = 1000, batchSize = 32) {
         const { inputs, labels, inputMax, inputMinVal, labelMinVal, labelMax } = this.getNormalizedValues();
-        await this.trainModel(inputs, labels, epochs, batchSize);
 
+        this.trainModel(inputs, labels, epochs, batchSize);
         return this.getPrediction(params, inputMax, inputMinVal, labelMinVal, labelMax);
     }
 
     async trainModel(inputs, labels, epochs, batchSize) {
-        return this.model.fit(inputs, labels, {
+        return await this.model.fit(inputs, labels, {
             batchSize,
             epochs
         })

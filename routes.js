@@ -13,7 +13,7 @@ import analyze from 'analyze';
 export const router = new Router();
 
 export default () => {
-    router.use(mount('/', predictions()));
+    router.use(mount('/predictions', predictions()));
     router.use(mount('/rates-scheduler', ratesScheduler()));
     router.use(mount('/predictions-scheduler', predictionsScheduler()));
     router.use(mount('/rates', rates()));

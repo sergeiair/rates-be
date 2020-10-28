@@ -4,13 +4,13 @@ import {authMiddleware} from "../../../guards/authMiddlware";
 import AnalyzeController from "../controller";
 import AnalyzeDataService from "../data.service";
 import {getUserEmailFromSession} from "../../../utils/session";
-import {PredictionsTFService} from "../../../tf/predictionsTFService";
+import {PredictionTFService} from "../../../tf/predictionTFService";
 
 const Router = require('koa-trie-router');
 const router = new Router();
 const controller = new AnalyzeController(
     new AnalyzeDataService(),
-    new PredictionsTFService()
+    new PredictionTFService()
 );
 
 export const computeAppPredictions = () => {
