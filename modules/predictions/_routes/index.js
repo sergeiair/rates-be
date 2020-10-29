@@ -58,8 +58,6 @@ export const getPredRateByHistory = () => {
           getUserEmailFromSession(ctx)
       );
 
-      appLogger.warn(result)
-
       ctx.body = { message: 'Done!', result };
     } catch (e) {
       ctx.body = { message: e.message };

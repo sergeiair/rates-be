@@ -21,7 +21,7 @@ export class PredictionTFService {
             const predResult = this.model.predict(normalizedPredVals.reshape([1, params.length]));
             const readablePred = predResult.mul(labelMax.sub(labelMinVal)).add(labelMinVal);
 
-            return readablePred.print();
+            return readablePred.dataSync();
         });
     }
 
@@ -45,6 +45,7 @@ export class PredictionTFService {
 
     init(items) {
         this._data = [...items || []];
+
         this.initTensors();
     }
 
@@ -80,12 +81,12 @@ export class PredictionTFService {
     async getResult(params, epochs = 1000, batchSize = 32) {
         const { inputs, labels, inputMax, inputMinVal, labelMinVal, labelMax } = this.getNormalizedValues();
 
-        this.trainModel(inputs, labels, epochs, batchSize);
+        await this.trainModel(inputs, labels, epochs, batchSize);
         return this.getPrediction(params, inputMax, inputMinVal, labelMinVal, labelMax);
     }
 
     async trainModel(inputs, labels, epochs, batchSize) {
-        return await this.model.fit(inputs, labels, {
+        return this.model.fit(inputs, labels, {
             batchSize,
             epochs
         })

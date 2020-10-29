@@ -46,24 +46,21 @@ export default class PredictionsController {
     }
 
     async getPredRateByHistory(params, email) {
-        return this.dataService.getAllCompletedPredictions(email)
-            /*.then((predictions) => {
-                const data4TF = predictions.map((pred) => ({
-                    predRate: pred.predRate,
-                    realRate: pred.realRate,
-                    finalRate: pred.finalRate,
-                    forecast: pred.forecast,
-                    volatility: pred.volatility
-                }));
+        const predictions = await this.dataService.getAllCompletedPredictions(email);
+        const data4TF = predictions.map((pred) => ({
+            predRate: pred.predRate,
+            realRate: pred.realRate,
+            finalRate: pred.finalRate,
+            forecast: pred.forecast,
+            volatility: pred.volatility
+        }));
 
-                this.tfsService.init(data4TF);
-
-                return this.tfsService.getResult([
-                    this.getVolatilityByPair(params.volatility, params.pair),
-                    params.forecast,
-                    params.realRate,
-                    params.predRate
-                ], 10);
-            });*/
+        this.tfsService.init(data4TF);
+        return this.tfsService.getResult([
+            this.getVolatilityByPair(params.volatility, params.pair),
+            params.forecast,
+            params.realRate,
+            params.predRate
+        ], 500);
     }
 }
