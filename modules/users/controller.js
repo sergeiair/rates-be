@@ -1,5 +1,8 @@
 'use strict';
 
+import {Mailer} from "../../mailer/mailer";
+import {getRestoreHTML} from "../../utils/email";
+
 export default class UsersController {
 
     dataService;
@@ -22,6 +25,20 @@ export default class UsersController {
 
     destroySession(email) {
         return this.dataService.destroySession(email);
+    }
+
+    async initRestore(email) {
+        const params = await this.dataService.getRestoreToken(email);
+
+        if (params.data.token) {
+            Mailer.sendPwReset(email, getRestoreHTML(params.data.name, params.data.token))
+        }
+
+        return params;
+    }
+
+    createPw(pw, token) {
+        return this.dataService.createPw(pw, token);
     }
 
 

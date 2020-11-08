@@ -6,6 +6,7 @@ import {ResponseWrapper} from "../../db/helpers/responseWrapper";
 import {SessionSchema} from "../../db/schemes/session";
 import {sessionConfig} from "../../middlewares";
 import * as md5 from "md5";
+import {emailToRestoreToken} from "../../utils/hash";
 
 export default class UsersDataService {
 
@@ -37,7 +38,7 @@ export default class UsersDataService {
         const response = new ResponseWrapper();
         const user = await this.getUserUnsafe(data.email);
 
-        if (!!user && bcrypt.compareSync(data.pw || '', user.pw || '')) {
+        if (bcrypt.compareSync(data.pw || '', user.pw || '')) {
             response.data = {
                 hashedEmail: md5(user.email),
                 email: user.email,
@@ -87,6 +88,38 @@ export default class UsersDataService {
             });
     }
 
+    async getRestoreToken(email) {
+        return new Promise(((resolve, reject) => {
+            Realm.open(this.userConfig)
+                .then(realm => {
+                    const response = new ResponseWrapper();
+                    const user = realm.objectForPrimaryKey('User', email);
+
+                    if (!!user && !user.restoreToken) {
+                        realm.write(() => {
+                            user.restoreToken = emailToRestoreToken(email);
+                            response.data = {
+                                token: user.restoreToken,
+                                name: user.name
+                            };
+
+                            resolve(response);
+                        });
+                    } else {
+                        response.data = {status: "started"};
+                        response.code = 208;
+                        resolve(response);
+                    }
+
+                    realm.close();
+                })
+                .catch((e) => {
+                    appLogger.error(e.message);
+                    reject(e.message);
+                });
+        }));
+    }
+
     registerUser(data) {
         return Realm.open(this.userConfig)
             .then(realm => {
@@ -108,6 +141,33 @@ export default class UsersDataService {
                     });
                 } else {
                     response.error = 'Already exists';
+                    response.code = 200
+                }
+
+                realm.close();
+                return response;
+            })
+            .catch((e) => {
+                appLogger.error(e.message)
+            });
+    }
+
+    async createPw(pw, token) {
+        return Realm.open(this.userConfig)
+            .then(realm => {
+                const response = new ResponseWrapper();
+                const user = realm.objects('User')
+                    .filtered(`restoreToken = "${token}" LIMIT(1)`);
+
+                if (user[0]) {
+                    realm.write(() => {
+                        user[0].pw = bcrypt.hashSync(pw, 10);
+                        user[0].restoreToken = "";
+
+                        response.data = { status: 'Done' };
+                    });
+                } else {
+                    response.error = 'Failed';
                 }
 
                 realm.close();

@@ -5,6 +5,8 @@ import UsersDataService from "../data.service";
 import {getClientIp} from "../../../utils/network";
 import {getUserEmailFromSession} from "../../../utils/session";
 import * as md5 from "md5";
+import {Mailer} from "../../../mailer/mailer";
+import {appLogger} from "../../../logger";
 
 const Router = require('koa-trie-router');
 const router = new Router();
@@ -40,15 +42,21 @@ export const login = () => {
   router.post('/login', middleware, async (ctx, next) => {
 
     try {
-      const resp = await controller.getUser(ctx.request.body);
-      controller.storeSession(resp.data.hashedEmail, getClientIp(ctx.request));
+      const user = await controller.getUser(ctx.request.body);
 
-      ctx.status = resp.code;
-      ctx.session.user = `${resp.data.hashedEmail}$${Date.now()}`;
-      ctx.body = { message: 'Done', data: {
-        email: resp.data.email,
-        name: resp.data.name
-      }};
+      if (!!user.data) {
+        controller.storeSession(user.data.hashedEmail, getClientIp(ctx.request));
+
+        ctx.session.user = `${user.data.hashedEmail}$${Date.now()}`;
+        ctx.body = { message: 'Done', data: {
+          email: user.data.email,
+          name: user.data.name
+        }};
+      } else {
+        ctx.body = {};
+      }
+
+      ctx.status = user.code;
     } catch (e) {
       ctx.status = 500;
       ctx.body = { message: e.message };
@@ -79,4 +87,43 @@ export const logout = () => {
 
   return router.middleware();
 };
+
+export const restore = () => {
+  router.post('/restore', middleware, async (ctx, next) => {
+
+    try {
+      const params = await controller.initRestore(ctx.request.body.user);
+
+      ctx.status = params.code;
+      ctx.body = { message: 'Done' };
+    } catch (e) {
+      ctx.status = 500;
+      ctx.body = { message: e.message };
+    }
+
+    await next();
+  });
+
+  return router.middleware();
+};
+
+export const createPw = () => {
+  router.post('/create-pw', middleware, async (ctx, next) => {
+
+    try {
+      const params = await controller.createPw(ctx.request.body.pw, ctx.request.body.v);
+
+      ctx.status = params.code;
+      ctx.body = { message: 'Done', data: params };
+    } catch (e) {
+      ctx.status = 500;
+      ctx.body = { message: e.message };
+    }
+
+    await next();
+  });
+
+  return router.middleware();
+};
+
 

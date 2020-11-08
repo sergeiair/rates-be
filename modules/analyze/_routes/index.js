@@ -13,10 +13,13 @@ const controller = new AnalyzeController(
     new PredictionTFService()
 );
 
-export const computeAppPredictions = () => {
-  router.post('/compute-all', authMiddleware, async (ctx, next) => {
+export const getCompletedPredictions = () => {
+  router.post('/completed', authMiddleware, async (ctx, next) => {
     try {
-      const data = await controller.computeAllPredictions(getUserEmailFromSession(ctx));
+      const data = await controller.getAllCompletedPredictions(
+          getUserEmailFromSession(ctx),
+          ctx.request.body
+      );
 
       ctx.body = { message: 'Done', data };
     } catch (e) {

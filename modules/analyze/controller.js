@@ -10,6 +10,10 @@ export default class AnalyzeController {
         this.tfsService = _tfsInstance;
     }
 
+    getAllCompletedPredictions(email, params) {
+        return this.dataService.getAllCompletedPredictions(email, params);
+    }
+
 
 
 

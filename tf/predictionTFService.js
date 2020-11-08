@@ -51,7 +51,6 @@ export class PredictionTFService {
 
     initTensors() {
         tf.util.shuffle(this._data);
-
         this.initInputTnsr();
         this.initLabelsTnsr();
     }
