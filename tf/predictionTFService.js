@@ -1,17 +1,21 @@
+import {appLogger} from "../logger";
+
 const tf = require('@tensorflow/tfjs-node');
 
 export class PredictionTFService {
 
+    isRunning = false;
+
     model = tf.sequential();
 
     inputTnsr = null;
-
     labelTnsr = null;
 
     _data = [];
 
-    constructor() {
+    constructor(data) {
         this.configure();
+        this.init(data);
     }
 
     getPrediction(params, inputMax, inputMinVal, labelMinVal, labelMax) {
@@ -44,7 +48,7 @@ export class PredictionTFService {
     }
 
     init(items) {
-        this._data = [...items || []];
+        this._data = items || [];
 
         this.initTensors();
     }
@@ -74,21 +78,30 @@ export class PredictionTFService {
     }
 
     destroy() {
-        this.model.dispose();
+        this.model.dispose()
     }
 
-    async getResult(params, epochs = 1000, batchSize = 32) {
-        const { inputs, labels, inputMax, inputMinVal, labelMinVal, labelMax } = this.getNormalizedValues();
+    async getResult(params) {
+        const { inputMax, inputMinVal, labelMinVal, labelMax } = this.getNormalizedValues();
 
-        await this.trainModel(inputs, labels, epochs, batchSize);
         return this.getPrediction(params, inputMax, inputMinVal, labelMinVal, labelMax);
     }
 
-    async trainModel(inputs, labels, epochs, batchSize) {
-        return this.model.fit(inputs, labels, {
-            batchSize,
-            epochs
-        })
+    trainModel(epochs, batchSize) {
+        const { inputs, labels } = this.getNormalizedValues();
+
+        return new Promise((resolve, reject) => {
+            if (!this.isRunning) {
+                this.isRunning = true;
+                this.model.fit(inputs, labels, {
+                    batchSize,
+                    epochs
+                }).then(() => {
+                    this.isRunning = false;
+                    resolve('trainingDone');
+                });
+            }
+        });
     }
 
 

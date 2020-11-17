@@ -1,15 +1,16 @@
 'use strict';
 
-import {appLogger} from "../../logger";
+
+
+import {PredictionTFService} from "../../tf/predictionTFService";
 
 export default class PredictionsController {
 
     tfsService;
     dataService;
 
-    constructor(_dataServiceInstance, _tfsInstance) {
+    constructor(_dataServiceInstance) {
         this.dataService = _dataServiceInstance;
-        this.tfsService = _tfsInstance;
     }
 
     getAll(email) {
@@ -45,8 +46,9 @@ export default class PredictionsController {
         }
     }
 
-    async getPredRateByHistory(params, email) {
+    async prepareTFService(params, email) {
         const predictions = await this.dataService.getAllCompletedPredictions(email, params.pair);
+
         if (!!predictions && predictions.length) {
             const data4TF = predictions.map((pred) => ({
                 predRate: pred.predRate,
@@ -56,15 +58,16 @@ export default class PredictionsController {
                 volatility: pred.volatility
             }));
 
-            return this.getComputedPrediction(data4TF, params);
+            this.tfsService = undefined;
+            this.tfsService = new PredictionTFService(data4TF);
+
+            return await this.tfsService.trainModel(500, 32);
         } else {
-            return { result: ['You have no predictions for ' + params.pair]};
+            return 'empty'
         }
     }
 
-    getComputedPrediction(data, params) {
-        this.tfsService.init(data);
-
+    getComputedPrediction(params) {
         return this.tfsService.getResult([
             this.getVolatilityByPair(params.volatility, params.pair),
             params.forecast,

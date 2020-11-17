@@ -5,13 +5,11 @@ import PredictionsDataService from "../data.service";
 import {authMiddleware} from "../../../guards/authMiddlware";
 import {getUserEmailFromSession} from "../../../utils/session";
 import {PredictionTFService} from "../../../tf/predictionTFService";
-import {appLogger} from "../../../logger";
 
 const Router = require('koa-trie-router');
 const router = new Router();
 const controller = new PredictionsController(
-    new PredictionsDataService(),
-    new PredictionTFService()
+    new PredictionsDataService()
 );
 
 export const create = () => {
@@ -50,12 +48,30 @@ export const getAll = () => {
   return router.middleware();
 };
 
+export const prepareTFS = () => {
+  router.post('/prepare-for-history', authMiddleware, async (ctx, next) => {
+    try {
+      const status = await controller.prepareTFService(
+          ctx.request.body,
+          getUserEmailFromSession(ctx)
+      );
+
+      ctx.body = { message: 'Done!', status };
+    } catch (e) {
+      ctx.body = { message: e.message };
+    }
+
+    await next();
+  });
+
+  return router.middleware();
+};
+
 export const getPredRateByHistory = () => {
   router.post('/compute-current', authMiddleware, async (ctx, next) => {
     try {
-      const result = await controller.getPredRateByHistory(
-          ctx.request.body,
-          getUserEmailFromSession(ctx)
+      const result = await controller.getComputedPrediction(
+          ctx.request.body
       );
 
       ctx.body = { message: 'Done!', result };
