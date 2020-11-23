@@ -3,9 +3,6 @@
 # dependencies
 /node_modules
 
-# production
-/build
-
 /db/files/sessions
 /db/files/rates
 /db/files/users

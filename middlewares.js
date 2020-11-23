@@ -63,13 +63,18 @@ export default (app) => {
     app.keys = ['11223344qqwweerr'];
     app.use(bodyParser());
     app.use(serve(config.static_dir.root));
-    app.use(cors());
     app.use(session(sessionConfig, app));
     app.use(mount('/api', routes()));
 
     app.on('error', (err) => {
         appLogger.error(err.message);
     });
+
+    switch (process.env.NODE_ENV) {
+        case 'development':
+            app.use(cors());
+            break;
+    }
 }
 
 
