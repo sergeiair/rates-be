@@ -5,6 +5,7 @@ import AnalyzeController from "../controller";
 import AnalyzeDataService from "../data.service";
 import {getUserEmailFromSession} from "../../../utils/session";
 import {PredictionTFService} from "../../../tf/predictionTFService";
+import {dissoc, map} from "ramda";
 
 const Router = require('koa-trie-router');
 const router = new Router();
@@ -21,7 +22,7 @@ export const getCompletedPredictions = () => {
           ctx.request.body
       );
 
-      ctx.body = { message: 'Done', data };
+      ctx.body = { message: 'Done', data: map(dissoc('owner'), data) };
     } catch (e) {
       ctx.body = { message: e.message };
     }

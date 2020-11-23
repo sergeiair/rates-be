@@ -53,7 +53,7 @@ export const login = () => {
           name: user.data.name
         }};
       } else {
-        ctx.body = {};
+        ctx.body = { message: 'Not found', data: {} };
       }
 
       ctx.status = user.code;

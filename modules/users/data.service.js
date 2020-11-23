@@ -38,7 +38,7 @@ export default class UsersDataService {
         const response = new ResponseWrapper();
         const user = await this.getUserUnsafe(data.email);
 
-        if (bcrypt.compareSync(data.pw || '', user.pw || '')) {
+        if (!!user && bcrypt.compareSync(data.pw || '', user.pw || '')) {
             response.data = {
                 hashedEmail: md5(user.email),
                 email: user.email,
@@ -140,7 +140,7 @@ export default class UsersDataService {
                         response.data = { email };
                     });
                 } else {
-                    response.error = 'Already exists';
+                    response.error = 'User already exists';
                     response.code = 200
                 }
 

@@ -14,7 +14,8 @@ export default class PredictionsDataService {
         return Realm.open(this.config)
             .then(realm => {
                 return realm.objects('Prediction')
-                    .filtered(`owner = "${email}"`);
+                    .filtered(`owner = "${email}"`)
+                    .sorted('time', true);
             })
             .catch((e) => {
                 appLogger.error(e.message)

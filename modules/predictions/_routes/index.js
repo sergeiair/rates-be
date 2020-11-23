@@ -4,7 +4,7 @@ import PredictionsController from "../controller";
 import PredictionsDataService from "../data.service";
 import {authMiddleware} from "../../../guards/authMiddlware";
 import {getUserEmailFromSession} from "../../../utils/session";
-import {PredictionTFService} from "../../../tf/predictionTFService";
+import {dissoc, map} from "ramda";
 
 const Router = require('koa-trie-router');
 const router = new Router();
@@ -37,7 +37,7 @@ export const getAll = () => {
     try {
       const items = await controller.getAll(getUserEmailFromSession(ctx));
 
-      ctx.body = { message: 'Done fetch!', predictions: items };
+      ctx.body = { message: 'Done fetch!', predictions: map(dissoc('owner'), items) };
     } catch (e) {
       ctx.body = { message: e.message };
     }
