@@ -12,19 +12,9 @@ export const authMiddleware = async (ctx, next) => {
     } else {
         const storedSession = await controller.getSession(getUserEmailFromSession(ctx));
 
-        if (!storedSession) {
+        if (!storedSession || storedSession.expired <= Date.now()) {
             ctx.data = null;
             ctx.status = 401;
-        } else {
-            const validSession = storedSession.expired > Date.now() && storedSession.info === getClientIp(ctx);
-
-            console.log(storedSession.expired, Date.now());
-            console.log(storedSession.info , getClientIp(ctx));
-
-            if (!validSession) {
-                ctx.data = null;
-                ctx.status = 401;
-            }
         }
     }
 
