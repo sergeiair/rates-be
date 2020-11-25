@@ -8,12 +8,12 @@ export class StaticRatesStore {
     static latestBase = null;
 
     static latestRates = {
-        EUR: 0,
-        NOK: 0,
-        GBP: 0,
-        RUB: 0,
-        CHF: 0,
-        PLN: 0,
+        USDEUR: 0,
+        USDNOK: 0,
+        USDGBP: 0,
+        USDRUB: 0,
+        USDCHF: 0,
+        USDPLN: 0,
     };
 
     static set(base, rates) {
@@ -35,12 +35,12 @@ export class StaticRatesStore {
 
     static isNewValue(base, rates) {
         return this.latestBase !== base ||
-            this.latestRates.EUR.toString() !== rates.EUR.toString() ||
-            this.latestRates.NOK.toString() !== rates.NOK.toString() ||
-            this.latestRates.GBP.toString() !== rates.GBP.toString() ||
-            this.latestRates.RUB.toString() !== rates.RUB.toString() ||
-            this.latestRates.CHF.toString() !== rates.CHF.toString() ||
-            this.latestRates.PLN.toString() !== rates.PLN.toString();
+            this.latestRates.USDEUR.toString() !== rates.USDEUR.toString() ||
+            this.latestRates.USDNOK.toString() !== rates.USDNOK.toString() ||
+            this.latestRates.USDGBP.toString() !== rates.USDGBP.toString() ||
+            this.latestRates.USDRUB.toString() !== rates.USDRUB.toString() ||
+            this.latestRates.USDCHF.toString() !== rates.USDCHF.toString() ||
+            this.latestRates.USDPLN.toString() !== rates.USDPLN.toString();
     }
 
 }

@@ -31,7 +31,7 @@ export default class RatesSchedulerService {
             StaticRatesStore.updatePrevRequestTime();
             console.log(new Date().toLocaleTimeString());
 
-            axios.get(`${this.endpoint}&symbols=EUR,USD,PLN,NOK,GBP,CHF,RUB`)
+            axios.get(`${this.endpoint}&currency=USDEUR,USDPLN,USDNOK,USDGBP,USDCHF,USDRUB`)
                 .then(response => this.dataFetched(currency, response.data))
                 .catch(console.error);
         }

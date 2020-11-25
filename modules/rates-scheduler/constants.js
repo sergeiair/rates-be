@@ -1,4 +1,4 @@
 
-const API_KEY = '0f3d4ab831344e9c8be384209bfd867c';
+const API_KEY = 'WtgXjLLRpYZqNwOOXId0';
 
-export const DATA_SOURCE_ENDPOINT = 'https://api.currencyfreaks.com/latest?apikey=' + API_KEY;
+export const DATA_SOURCE_ENDPOINT = 'https://fxmarketapi.com/apilive?api_key=' + API_KEY;

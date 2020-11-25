@@ -19,6 +19,7 @@ export default class RatesSchedulerController {
 
     enable() {
         RatesSchedulerService.start('USD');
+        RatesSchedulerService.requestData('USD')
     }
 
     getStatus() {
@@ -26,11 +27,11 @@ export default class RatesSchedulerController {
     }
 
     dataFetched(currency, data) {
-        if (this.isSaveAllowed(currency, data.rates || {})) {
-            this.dataService.storeSingle(currency, data.rates || {});
+        if (this.isSaveAllowed(currency, data.price || {})) {
+            this.dataService.storeSingle(currency, data.price || {});
         }
 
-        this.updateStaticStore(currency, data.rates || {});
+        this.updateStaticStore(currency, data.price || {});
     }
 
     updateStaticStore(currency, rates) {

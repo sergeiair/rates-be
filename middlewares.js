@@ -60,6 +60,12 @@ export default (app) => {
         }
     });
 
+    switch (process.env.NODE_ENV) {
+        case 'development':
+            app.use(cors());
+            break;
+    }
+
     app.keys = ['11223344qqwweerr'];
     app.use(bodyParser());
     app.use(serve(config.static_dir.root));
@@ -70,11 +76,9 @@ export default (app) => {
         appLogger.error(err.message);
     });
 
-    switch (process.env.NODE_ENV) {
-        case 'development':
-            app.use(cors());
-            break;
-    }
+
+
+
 }
 
 

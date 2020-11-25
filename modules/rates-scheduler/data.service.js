@@ -20,13 +20,13 @@ export default class RatesSchedulerDataService {
                     realm.create('Rate', {
                         id: Date.now(),
                         base: currency,
-                        USD: parseFloat(rates.USD),
-                        EUR: parseFloat(rates.EUR),
-                        NOK: parseFloat(rates.NOK),
-                        GBP: parseFloat(rates.GBP),
-                        RUB: parseFloat(rates.RUB),
-                        CHF: parseFloat(rates.CHF),
-                        PLN: parseFloat(rates.PLN),
+                        USD: 1,
+                        EUR: parseFloat(rates.USDEUR),
+                        NOK: parseFloat(rates.USDNOK),
+                        GBP: parseFloat(rates.USDGBP),
+                        RUB: parseFloat(rates.USDRUB),
+                        CHF: parseFloat(rates.USDCHF),
+                        PLN: parseFloat(rates.USDPLN),
                         time: new Date().toISOString()
                     }, Realm.UpdateMode.Never);
                 });
