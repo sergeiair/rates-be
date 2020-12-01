@@ -3,7 +3,7 @@
 import RatesController from "../controller";
 import RatesDataService from "../data.service";
 import {authMiddleware} from "../../../guards/authMiddlware";
-import {appLogger} from "../../../logger";
+import {AppLogger} from "../../../logger";
 
 const Router = require('koa-trie-router');
 const router = new Router();

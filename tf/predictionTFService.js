@@ -1,4 +1,4 @@
-import {appLogger} from "../logger";
+import {AppLogger} from "../logger";
 
 const tf = require('@tensorflow/tfjs-node');
 

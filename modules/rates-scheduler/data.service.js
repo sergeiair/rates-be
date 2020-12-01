@@ -1,6 +1,6 @@
 import Realm from "realm";
 import {RateSchema} from "../../db/schemes/rates";
-import {appLogger} from "../../logger";
+import {AppLogger} from "../../logger";
 
 export default class RatesSchedulerDataService {
 
@@ -34,7 +34,7 @@ export default class RatesSchedulerDataService {
                 realm.close();
             })
             .catch((e) => {
-                appLogger.error(e.message)
+                AppLogger.error(e)
             });
     }
 

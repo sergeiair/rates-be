@@ -2,7 +2,7 @@ import serve from 'koa-static'
 import bodyParser from 'koa-bodyparser'
 import config from "./config";
 import routes from "./routes";
-import {appLogger} from "./logger/appLogger";
+import {AppLogger} from "./logger/AppLogger";
 
 const cors = require('@koa/cors');
 const mount = require('koa-mount');
@@ -22,7 +22,7 @@ export const sessionConfig = {
     signed: true, /** (boolean) signed or not (default true) */
     rolling: false, /** (boolean) Force a session identifier cookie to be set on every response. The expiration is reset to the original maxAge, resetting the expiration countdown. (default is false) */
     renew: false, /** (boolean) renew session when session is nearly expired, so we can always keep user logged in. (default is false)*/
-    genid: (ctx) => appLogger.warn(ctx)
+    genid: (ctx) => AppLogger.warn(ctx)
 };
 
 export default (app) => {
@@ -46,7 +46,7 @@ export default (app) => {
             }
 
         } catch (err) {
-            appLogger.error(err);
+            AppLogger.error(err);
 
             ctx.status = err.status || 500;
             ctx.type = 'json';
@@ -73,7 +73,7 @@ export default (app) => {
     app.use(mount('/api', routes()));
 
     app.on('error', (err) => {
-        appLogger.error(err.message);
+        AppLogger.error(err.message);
     });
 
 

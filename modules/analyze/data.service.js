@@ -1,6 +1,6 @@
 import Realm from "realm";
 import {PredictionSchema} from "../../db/schemes/prediction";
-import {appLogger} from "../../logger";
+import {AppLogger} from "../../logger";
 
 export default class AnalyzeDataService {
 
@@ -18,7 +18,7 @@ export default class AnalyzeDataService {
                     .sorted('time', true);
             })
             .catch((e) => {
-                appLogger.error(e.message)
+                AppLogger.error(e)
             });
     }
 

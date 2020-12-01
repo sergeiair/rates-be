@@ -1,6 +1,6 @@
 import Realm from "realm";
 import * as bcrypt from "bcrypt";
-import {appLogger} from "../../logger";
+import {AppLogger} from "../../logger";
 import {UserSchema} from "../../db/schemes/user";
 import {ResponseWrapper} from "../../db/helpers/responseWrapper";
 import {SessionSchema} from "../../db/schemes/session";
@@ -25,13 +25,13 @@ export default class UsersDataService {
     getUserUnsafe(email) {
         return Realm.open(this.userConfig)
             .then(realm => realm.objectForPrimaryKey('User', email))
-            .catch((e) => appLogger.error(e.message));
+            .catch((e) => AppLogger.error(e));
     }
 
     getSession(email) {
         return Realm.open(this.sessionConfig)
             .then(realm => realm.objectForPrimaryKey('Session', email))
-            .catch((e) => appLogger.error(e.message));
+            .catch((e) => AppLogger.error(e));
     }
 
     async getUser(data) {
@@ -66,7 +66,7 @@ export default class UsersDataService {
                 realm.close();
             })
             .catch((e) => {
-                appLogger.error(e.message)
+                AppLogger.error(e)
             });
     }
 
@@ -84,7 +84,7 @@ export default class UsersDataService {
                 realm.close();
             })
             .catch((e) => {
-                appLogger.error(e.message)
+                AppLogger.error(e)
             });
     }
 
@@ -114,7 +114,7 @@ export default class UsersDataService {
                     realm.close();
                 })
                 .catch((e) => {
-                    appLogger.error(e.message);
+                    AppLogger.error(e);
                     reject(e.message);
                 });
         }));
@@ -148,7 +148,7 @@ export default class UsersDataService {
                 return response;
             })
             .catch((e) => {
-                appLogger.error(e.message)
+                AppLogger.error(e)
             });
     }
 
@@ -174,7 +174,7 @@ export default class UsersDataService {
                 return response;
             })
             .catch((e) => {
-                appLogger.error(e.message)
+                AppLogger.error(e)
             });
     }
 

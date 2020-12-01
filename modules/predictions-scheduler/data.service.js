@@ -1,6 +1,6 @@
 import Realm from "realm";
 import {PredictionSchema} from "../../db/schemes/prediction";
-import {appLogger} from "../../logger";
+import {AppLogger} from "../../logger";
 
 export default class PredictionsSchedulerDataService {
 
@@ -19,9 +19,9 @@ export default class PredictionsSchedulerDataService {
 
                 realm.write(() => {
                     pendingItems.forEach((item) => {
-                        const [_, curr2] = item.pair.split('/');
+                        const pair = item.pair.replace('/', '');
 
-                        item.finalRate = parseFloat(rates[curr2]);
+                        item.finalRate = parseFloat(rates[pair]);
                         item.verifyTime = currentEpoch;
                     });
                 });
@@ -29,7 +29,7 @@ export default class PredictionsSchedulerDataService {
                 realm.close();
             })
             .catch((e) => {
-                appLogger.error(e.message)
+                AppLogger.error(e)
             });
 
 

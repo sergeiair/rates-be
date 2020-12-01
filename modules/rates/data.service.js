@@ -1,6 +1,6 @@
 import Realm from "realm";
 import {RateSchema} from "../../db/schemes/rates";
-import {appLogger} from "../../logger";
+import {AppLogger} from "../../logger";
 
 export default class RatesDataService {
 
@@ -20,7 +20,7 @@ export default class RatesDataService {
                     .sorted('id', true)
                     .slice(0, 1);
             }).catch((e) => {
-                appLogger.error(e.message)
+                AppLogger.error(e)
             });
     }
 
@@ -31,7 +31,7 @@ export default class RatesDataService {
                     .filtered(`base = "${base}"`)
                     .slice(0, number);
             }).catch((e) => {
-                appLogger.error(e.message)
+                AppLogger.error(e)
             });
     }
 

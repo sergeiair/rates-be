@@ -1,5 +1,15 @@
-const bunyan = require('bunyan');
+const fs = require('fs');
 
-const loggerInstance = bunyan.createLogger({name: 'app', level: 'debug', path: './log.json'});
+export class AppLogger {
 
-export const appLogger = loggerInstance;
+    static logFile = fs.createWriteStream('./logger/files/log', { flags: 'a' });
+    static logStdout = process.stdout;
+
+    static error(error) {
+        try {
+            this.logFile.write(`${error.stack.split(')')[0] || error.message} \n`);
+        } catch (e) {
+            console.error(e.message);
+        }
+    }
+}

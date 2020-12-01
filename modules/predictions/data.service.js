@@ -1,6 +1,6 @@
 import {PredictionSchema} from "../../db/schemes/prediction";
 import Realm from "realm";
-import {appLogger} from "../../logger";
+import {AppLogger} from "../../logger";
 
 export default class PredictionsDataService {
 
@@ -18,7 +18,7 @@ export default class PredictionsDataService {
                     .sorted('time', true);
             })
             .catch((e) => {
-                appLogger.error(e.message)
+                AppLogger.error(e)
             });
     }
 
@@ -36,7 +36,7 @@ export default class PredictionsDataService {
                 });
 
                 realm.close();
-            }).catch((e) => appLogger.error(e.message));
+            }).catch((e) => AppLogger.error(e));
     }
 
     getAllCompletedPredictions(email, pair) {
@@ -46,7 +46,7 @@ export default class PredictionsDataService {
                     .filtered(`owner = "${email}" AND finalRate != ${0} AND pair = "${pair}"`);
             })
             .catch((e) => {
-                appLogger.error(e.message)
+                AppLogger.error(e)
             });
     }
 }

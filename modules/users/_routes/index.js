@@ -6,7 +6,7 @@ import {getClientIp} from "../../../utils/network";
 import {getUserEmailFromSession} from "../../../utils/session";
 import * as md5 from "md5";
 import {Mailer} from "../../../mailer/mailer";
-import {appLogger} from "../../../logger";
+import {AppLogger} from "../../../logger";
 
 const Router = require('koa-trie-router');
 const router = new Router();
