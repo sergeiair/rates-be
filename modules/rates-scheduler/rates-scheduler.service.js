@@ -36,4 +36,12 @@ export default class RatesSchedulerService {
                 .catch(console.error);
         }
     }
+
+    static requestDataImidiate(currency) {
+        console.log(new Date().toLocaleTimeString());
+
+        axios.get(`${this.endpoint}&currency=USDEUR,USDPLN,USDNOK,USDGBP,USDCHF,USDRUB`)
+            .then(response => this.dataFetched(currency, response.data))
+            .catch(console.error);
+    }
 }

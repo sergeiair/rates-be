@@ -1,8 +1,7 @@
 'use strict';
 
-
-
 import {PredictionTFService} from "../../tf/predictionTFService";
+import {StaticRatesStore} from "../../static/rates";
 
 export default class PredictionsController {
 
@@ -19,6 +18,10 @@ export default class PredictionsController {
 
     storeSingle(data) {
         this.dataService.storeSingle(this.getPreparedPredData(data));
+    }
+
+    verifySingle(data, email) {
+        return this.dataService.verifySingle(data.id, email, StaticRatesStore.latestRates);
     }
 
     getPreparedPredData(data) {

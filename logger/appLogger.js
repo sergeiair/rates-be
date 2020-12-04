@@ -1,3 +1,6 @@
+import {is} from "ramda";
+
+
 const fs = require('fs');
 
 export class AppLogger {
@@ -7,7 +10,17 @@ export class AppLogger {
 
     static error(error) {
         try {
-            this.logFile.write(`${error.stack.split(')')[0] || error.message} \n`);
+            if (is(Object, error)) {
+                if (error.stack) {
+                    this.logFile.write(`${error.stack.split(')')[0]} \n`);
+                } else if (!error.stack) {
+                    this.logFile.write(`${error.message} \n`);
+                } else {
+                    this.logFile.write(`Unknown error ${error.toString()} \n`);
+                }
+            } else if (is(String, error)) {
+                this.logFile.write(`${error} \n`);
+            }
         } catch (e) {
             console.error(e.message);
         }

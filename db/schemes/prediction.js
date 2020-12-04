@@ -3,7 +3,7 @@ export const PredictionSchema = {
     name: 'Prediction',
     primaryKey: 'id',
     properties: {
-        id: 'int',
+        id: 'string',
         predRate: 'double',
         realRate: 'double',
         finalRate: 'double',

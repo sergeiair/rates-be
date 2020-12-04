@@ -67,6 +67,25 @@ export const prepareTFS = () => {
   return router.middleware();
 };
 
+export const verifySingle = () => {
+  router.post('/verify', authMiddleware, async (ctx, next) => {
+    try {
+      const data = await controller.verifySingle(
+          ctx.request.body,
+          getUserEmailFromSession(ctx)
+      );
+
+      ctx.body = { message: 'Done!', data };
+    } catch (e) {
+      ctx.body = { message: e.message };
+    }
+
+    await next();
+  });
+
+  return router.middleware();
+};
+
 export const getPredRateByHistory = () => {
   router.post('/compute-current', authMiddleware, async (ctx, next) => {
     try {

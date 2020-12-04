@@ -19,7 +19,7 @@ export default class RatesSchedulerController {
 
     enable() {
         RatesSchedulerService.start('USD');
-        RatesSchedulerService.requestData('USD')
+        RatesSchedulerService.requestDataImidiate('USD')
     }
 
     getStatus() {
