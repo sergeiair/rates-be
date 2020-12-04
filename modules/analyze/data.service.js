@@ -14,7 +14,7 @@ export default class AnalyzeDataService {
         return Realm.open(this.config)
             .then(realm => {
                 return realm.objects('Prediction')
-                    .filtered(`owner = "${email}" AND finalRate != ${0} AND time >= ${params.dateStart} AND time <= ${params.dateEnd}`)
+                    .filtered(`owner = "${email}" AND finalRate != ${0} AND time >= ${params.dateStart} AND verifyTime <= ${params.dateEnd}`)
                     .sorted('time', true);
             })
             .catch((e) => {
