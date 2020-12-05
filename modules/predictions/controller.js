@@ -37,9 +37,13 @@ export default class PredictionsController {
         } else {
             switch (pair) {
                 case 'USD/CHF':
+                case 'EUR/CHF':
                     return 1;
-                case 'USD/GBP':
+                case 'GBP/USD':
                 case 'USD/EUR':
+                case 'USD/JPY':
+                case 'USD/PLN':
+                case 'EUR/PLN':
                     return 2;
                 case 'USD/RUB':
                     return 4;

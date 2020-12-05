@@ -17,6 +17,7 @@ export default class PredictionsSchedulerDataService {
                 const pendingItems = realm.objects('Prediction')
                     .filtered(`finalRate = 0 AND time < ${currentEpoch}`) || [];
 
+
                 realm.write(() => {
                     pendingItems.forEach((item) => {
                         const pair = item.pair.replace('/', '');

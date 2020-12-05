@@ -1,4 +1,4 @@
-import {DATA_SOURCE_ENDPOINT} from "./constants";
+import {DATA_SOURCE_ENDPOINT, PAIRS} from "./constants";
 import {StaticRatesStore} from "../../static/rates";
 
 const axios = require('axios').default;
@@ -13,6 +13,10 @@ export default class RatesSchedulerService {
     static job = null;
 
     static status = 0;
+
+    static get requestPairs() {
+        return PAIRS.map(pair => pair.replace('/', '')).join();
+    }
 
     static start(currency) {
         this.job = this.instance.scheduleJob('*/45 * * * *', () => this.requestData(currency));
@@ -31,7 +35,7 @@ export default class RatesSchedulerService {
             StaticRatesStore.updatePrevRequestTime();
             console.log(new Date().toLocaleTimeString());
 
-            axios.get(`${this.endpoint}&currency=USDEUR,USDPLN,USDNOK,USDGBP,USDCHF,USDRUB`)
+            axios.get(`${this.endpoint}&currency=${this.requestPairs}`)
                 .then(response => this.dataFetched(currency, response.data))
                 .catch(console.error);
         }
@@ -40,7 +44,7 @@ export default class RatesSchedulerService {
     static requestDataImidiate(currency) {
         console.log(new Date().toLocaleTimeString());
 
-        axios.get(`${this.endpoint}&currency=USDEUR,USDPLN,USDNOK,USDGBP,USDCHF,USDRUB`)
+        axios.get(`${this.endpoint}&currency=${this.requestPairs}`)
             .then(response => this.dataFetched(currency, response.data))
             .catch(console.error);
     }

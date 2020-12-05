@@ -4,30 +4,30 @@ import {AppLogger} from "../../logger";
 
 export default class RatesSchedulerDataService {
 
-    validCurrencies = ['USD', 'EUR', 'NOK', 'GBP', 'RUB', 'CHF', 'PLN'];
-
     config = {
         schema: [RateSchema],
         deleteRealmIfMigrationNeeded: true,
         path: './db/files/rates/01.realm',
     };
 
+    getStorageRatesValues(rates) {
+        return Object.keys(rates).reduce((acc, curr) => {
+            if (!!rates[curr]) {
+                return  { ...acc, [curr]: parseFloat(rates[curr]) }
+            } else {
+                return acc;
+            }
+        }, {});
+    }
 
-    storeSingle(currency, rates) {
+    storeSingle(rates) {
         Realm.open(this.config)
             .then(realm => {
                 realm.write(() => {
                     realm.create('Rate', {
                         id: Date.now(),
-                        base: currency,
-                        USD: 1,
-                        EUR: parseFloat(rates.USDEUR),
-                        NOK: parseFloat(rates.USDNOK),
-                        GBP: parseFloat(rates.USDGBP),
-                        RUB: parseFloat(rates.USDRUB),
-                        CHF: parseFloat(rates.USDCHF),
-                        PLN: parseFloat(rates.USDPLN),
-                        time: new Date().toISOString()
+                        time: new Date().toISOString(),
+                        ...this.getStorageRatesValues(rates)
                     }, Realm.UpdateMode.Never);
                 });
 

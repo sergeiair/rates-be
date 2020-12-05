@@ -46,8 +46,9 @@ export default class PredictionsDataService {
             .then(async realm => {
                 return await new Promise((resolve) => {
                     const prediction = realm.objectForPrimaryKey('Prediction', id);
+                    const isUserValid = prediction.owner === email;
 
-                    if (!!prediction && prediction.owner === email && !prediction.finalRate) {
+                    if (!!prediction && isUserValid && !prediction.finalRate) {
                         realm.write(() => {
                             const pair = prediction.pair.replace('/', '');
 

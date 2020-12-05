@@ -8,12 +8,8 @@ export default class RatesController {
         this.dataService = _dataServiceInstance;
     }
 
-    getPair(base, second) {
-        return this.dataService.getPair(base);
-    }
-
     getHistory(base, number) {
-        return this.dataService.getHistory(base, number);
+        return this.dataService.getHistory(number);
     }
 
 }

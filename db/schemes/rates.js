@@ -4,14 +4,19 @@ export const RateSchema = {
     primaryKey: 'id',
     properties: {
         id: 'int',
-        base: {type: 'string', indexed: true},
-        USD: 'double',
-        EUR: 'double',
-        NOK: 'double',
-        GBP: 'double',
-        RUB: 'double',
-        CHF: 'double',
-        PLN: 'double',
+
+        EURUSD: 'double',
+        EURPLN: 'double',
+        EURCHF: 'double',
+        EURGBP: 'double',
+
+        USDNOK: 'double',
+        GBPUSD: 'double',
+        USDRUB: 'double',
+        USDCHF: 'double',
+        USDPLN: 'double',
+        USDJPY: 'double',
+
         time: 'string',
     }
 };

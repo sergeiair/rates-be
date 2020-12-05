@@ -10,7 +10,8 @@ export default class PredictionsSchedulerService {
     static status = 0;
 
     static start(currency) {
-        this.job = this.instance.scheduleJob('*/30 * * * * *', () => this.startPendingItemsReview(currency));
+        this.job = this.instance.scheduleJob('*/30 * * * * *', () =>
+            this.startPendingItemsReview(currency));
         this.status = 1;
     }
 

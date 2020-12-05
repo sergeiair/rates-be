@@ -28,18 +28,18 @@ export default class RatesSchedulerController {
 
     dataFetched(currency, data) {
         if (this.isSaveAllowed(currency, data.price || {})) {
-            this.dataService.storeSingle(currency, data.price || {});
+            this.dataService.storeSingle(data.price || {});
         }
 
-        this.updateStaticStore(currency, data.price || {});
+        this.updateStaticStore(data.price || {});
     }
 
-    updateStaticStore(currency, rates) {
-        StaticRatesStore.set(currency, rates);
+    updateStaticStore(rates) {
+        StaticRatesStore.updateLocalLatest(rates);
     }
 
-    isSaveAllowed(currency, rates) {
-        return StaticRatesStore.isNewValue(currency, rates);
+    isSaveAllowed(rates) {
+        return StaticRatesStore.isNewValue(rates);
     }
 
 }
