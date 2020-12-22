@@ -32,6 +32,23 @@ export const create = () => {
   return router.middleware();
 };
 
+export const clearAll = () => {
+  router.del('/clear', authMiddleware, async (ctx, next) => {
+    try {
+      controller.clearAll(getUserEmailFromSession(ctx));
+
+      ctx.body = { message: 'Done!' };
+    } catch (e) {
+      ctx.body = { message: e.message };
+    }
+
+    await next();
+  });
+
+
+  return router.middleware();
+};
+
 export const getAll = () => {
   router.get('/', authMiddleware, async (ctx, next) => {
     try {

@@ -19,7 +19,7 @@ export default class RatesSchedulerService {
     }
 
     static start(currency) {
-        this.job = this.instance.scheduleJob('*/45 * * * *', () => this.requestData(currency));
+        this.job = this.instance.scheduleJob('*/5 * * * *', () => this.requestData(currency));
         this.status = 1;
     }
 

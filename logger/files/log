@@ -1,1 +1,10 @@
 
+NotFoundError: Not Found
+    at Object.throw (/Users/sergeizz/WebstormProjects/rates-be/node_modules/koa/lib/context.js:97:11 
+Not Found 
+NotFoundError: Not Found
+    at Object.throw (/Users/sergeizz/WebstormProjects/rates-be/node_modules/koa/lib/context.js:97:11 
+Not Found 
+Error: Can only delete objects within a transaction.
+    at /Users/sergeizz/WebstormProjects/rates-be/build/webpack:/modules/predictions/data.service.js:35:17
+    at processTicksAndRejections (internal/process/task_queues.js:94:5 

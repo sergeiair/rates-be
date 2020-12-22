@@ -24,6 +24,23 @@ export default class PredictionsDataService {
             });
     }
 
+    clearAll(email) {
+        return Realm.open(this.config)
+            .then(realm => {
+                const preds = realm.objects('Prediction')
+                    .filtered(`owner = "${email}"`);
+
+                realm.write(() => {
+                    realm.delete(preds);
+                });
+
+                realm.close();
+            })
+            .catch((e) => {
+                AppLogger.error(e)
+            });
+    }
+
     storeSingle(data) {
         Realm.open(this.config)
             .then(realm => {
@@ -60,7 +77,7 @@ export default class PredictionsDataService {
 
                         realm.close();
                     } else {
-                        resolve(null);
+                        resolve(dissoc('owner', prediction))
                     }
                 });
             })

@@ -16,6 +16,10 @@ export default class PredictionsController {
         return this.dataService.getAll(email);
     }
 
+    clearAll(email) {
+        return this.dataService.clearAll(email);
+    }
+
     storeSingle(data) {
         this.dataService.storeSingle(this.getPreparedPredData(data));
     }

@@ -5,7 +5,7 @@ export class StaticRatesStore {
 
     static prevSet = Date.now();
 
-    static requiredMsGap = 45 * 60 * 1000;
+    static requiredMsGap = 5 * 60 * 1000;
 
     static _latestRates = {};
 
