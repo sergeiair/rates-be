@@ -8,7 +8,7 @@ export default class RatesController {
         this.dataService = _dataServiceInstance;
     }
 
-    getHistory(base, number) {
+    getHistory(number) {
         return this.dataService.getHistory(number);
     }
 

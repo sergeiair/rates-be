@@ -9,6 +9,7 @@ import predictionsScheduler from 'predictions-scheduler';
 import rates from 'rates';
 import users from 'users';
 import analyze from 'analyze';
+import stats from 'stats';
 
 export const router = new Router();
 
@@ -19,6 +20,7 @@ export default () => {
     router.use(mount('/rates', rates()));
     router.use(mount('/users', users()));
     router.use(mount('/analyze', analyze()));
+    router.use(mount('/stats', stats()));
 
     return router.middleware()
 }
