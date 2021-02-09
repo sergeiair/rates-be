@@ -14,7 +14,7 @@ export default class RatesDataService {
         return Realm.open(this.config)
             .then(realm => {
                 return realm.objects('Rate')
-                    .sorted('id', false)
+                    .sorted('id', true)
                     .slice(0, number);
             }).catch((e) => {
                 AppLogger.error(e)

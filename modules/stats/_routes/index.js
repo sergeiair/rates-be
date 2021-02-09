@@ -9,8 +9,15 @@ const Router = require('koa-trie-router');
 const router = new Router();
 const controller = new RatesController(new RatesDataService());
 
+const middleware = async (ctx, next) => {
+  ctx.type = 'json';
+  ctx.set('Access-Control-Expose-Headers', 'GoAway');
+
+  await next()
+};
+
 export const getStats = () => {
-  router.get('/whatsgoingon', authMiddleware, async (ctx, next) => {
+  router.get('/whatsgoingon', middleware, async (ctx, next) => {
     try {
       const data = await controller.getStats();
 
