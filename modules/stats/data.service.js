@@ -45,7 +45,7 @@ export default class StatsDataService {
     getPredsCount() {
         return Realm.open(this.predsConfig)
             .then(realm => {
-                return realm.objects('Rate').length;
+                return realm.objects('Prediction').length;
             }).catch((e) => {
                 AppLogger.error(e)
             });
